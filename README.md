@@ -46,6 +46,6 @@ and you can clean the generated files with:
 > Twitter: [@ahmedheltaher](https://twitter.com/ahmedheltaher)  
 > LinkedIn: [ahmedheltaher](https://www.linkedin.com/in/ahmedheltaher/)  
 > Anyone is free to use this code however they want.
-> Bugfixes or improvements are welcome
-> Vulkan Library is required
+> Bugfixes or improvements are welcome  
+> Vulkan Library is required  
 > Made & tested in Linux Ubuntu 22.04 environment
