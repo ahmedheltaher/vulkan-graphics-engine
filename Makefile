@@ -1,13 +1,13 @@
 CFLAGS = -std=c++17 -O2
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
-Tutorial: **/*.cpp *.cpp **/*.hpp
-	g++ $(CFLAGS) -o Tutorial **/*.cpp *.cpp $(LDFLAGS)
+App: **/*.cpp *.cpp **/*.hpp
+	g++ $(CFLAGS) -o App **/*.cpp *.cpp $(LDFLAGS)
 
 .PHONY: test clean
 
-test: Tutorial
-	./Tutorial
+test: App
+	./App
 
 clean:
-	rm -f Tutorial
+	rm -f App

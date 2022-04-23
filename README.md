@@ -43,7 +43,7 @@ and you can clean the generated files with:
 
 > Author: Ahmed Eltaher  
 > Email: ahmedheltaher@gmail.com  
-> Twitter: @ahmedheltaher  
+> Twitter: [@ahmedheltaher](https://twitter.com/ahmedheltaher)  
 > LinkedIn: [ahmedheltaher](https://www.linkedin.com/in/ahmedheltaher/)  
 > Anyone is free to use this code however they want.
 > Bugfixes or improvements are welcome
