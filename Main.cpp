@@ -1,4 +1,4 @@
-#include "app/first_app.hpp"
+#include "App/FirstApp.hpp"
 
 // std
 #include <cstdlib>
@@ -7,6 +7,7 @@
 
 int main() {
 	App::FirstApp app{};
+
 	try {
 		app.Run();
 	}

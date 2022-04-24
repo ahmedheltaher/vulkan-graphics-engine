@@ -1,4 +1,4 @@
-#include "./window.hpp"
+#include "./Window.hpp"
 
 namespace Engine {
 	Window::Window(std::string title, int width, int height)
@@ -25,6 +25,12 @@ namespace Engine {
 		glfwSwapInterval(enabled);
 	}
 
+	void Window::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
+		if (glfwCreateWindowSurface(instance, m_Data.Window, nullptr, surface) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface!");
+		}
+	}
+
 	void Window::Init() {
 		if (!glfwInit()) {
 			throw std::runtime_error("Failed to initialize GLFW!");
@@ -36,5 +42,6 @@ namespace Engine {
 		m_Data.Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwSetWindowUserPointer(m_Data.Window, &m_Data);
 		SetVSync(m_Data.VSync);
+		glfwSwapBuffers(m_Data.Window);
 	}
 }
