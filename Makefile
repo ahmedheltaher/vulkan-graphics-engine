@@ -16,10 +16,10 @@ ${TARGET}: **/*.cpp *.cpp **/*.hpp
 
 # make shader targets
 %.vert.spv: %.vert
-	sudo ${GLSLC} $< -o $@
+	${GLSLC} $< -o $@
 
 %.frag.spv: %.frag
-	sudo ${GLSLC} $< -o $@
+	${GLSLC} $< -o $@
 
 .PHONY: test clean
 

@@ -1,6 +1,7 @@
 #include "./Pipeline.hpp"
+#include "Model.hpp"
 
-// std
+// std lib headers
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -68,12 +69,17 @@ namespace Engine {
 		saderStageInfo[1].pNext = nullptr;
 		saderStageInfo[1].pSpecializationInfo = nullptr;
 
+		auto bindingDescription = Model::Vertex::GetBindingDescriptions();
+		auto attributeDescriptions = Model::Vertex::GetAttributeDescriptions();
+
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.pVertexBindingDescriptions = nullptr;
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
-		vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+
+		vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size());
+		vertexInputInfo.pVertexBindingDescriptions = bindingDescription.data();
+
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 		VkPipelineViewportStateCreateInfo viewportInfo{};
 

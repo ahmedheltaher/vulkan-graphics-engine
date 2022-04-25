@@ -4,18 +4,17 @@
 #include "../Engine/Pipeline.hpp"
 #include "../Engine/Device.hpp"
 #include "../Engine/SwapChain.hpp"
+#include "../Engine/Model.hpp"
 
 #include "../Engine/Utils/NonMoveable.hpp"
 #include "../Engine/Utils/NonCopyable.hpp"
-
-
 
 // std lib headers
 #include <memory>
 #include <vector>
 
 namespace App {
-	class FirstApp: public NonMoveable, public NonCopyable {
+	class FirstApp : public NonMoveable, public NonCopyable {
 	public:
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 600;
@@ -27,7 +26,12 @@ namespace App {
 		void Run();
 
 	private:
-
+		void LoadModels();
+		void Sierpinski(std::vector<Engine::Model::Vertex>& vertices,
+			int depth,
+			glm::vec2 left,
+			glm::vec2 right,
+			glm::vec2 top);
 		void CreatePipeline();
 		void CreatePipelibeLayout();
 		void CreateCommandBuffers();
@@ -39,5 +43,7 @@ namespace App {
 		std::unique_ptr<Engine::Pipeline> m_Pipeline;
 		VkPipelineLayout m_PipelineLayout;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+		std::unique_ptr<Engine::Model> m_Model;
 	};
 }
