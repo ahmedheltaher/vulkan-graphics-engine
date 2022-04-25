@@ -14,9 +14,9 @@
 namespace Engine {
 	class Model : public NonCopyable, public NonMoveable {
 	public:
-
 		struct Vertex {
 			glm::vec2 position;
+			glm::vec3 color;
 
 			static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
 			static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();

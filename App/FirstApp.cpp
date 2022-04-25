@@ -75,7 +75,7 @@ namespace App {
 			renderPassInfo.renderArea.extent = m_SwapChain.GetSwapChainExtent();
 
 			std::array<VkClearValue, 2> clearValues{};
-			clearValues[0].color = { 0.1f, 0.1f, 0.1f, 1.0f };
+			clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
 			clearValues[1].depthStencil = { 1.0f, 0 };
 
 			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -113,8 +113,12 @@ namespace App {
 	}
 
 	void FirstApp::LoadModels() {
-		std::vector<Engine::Model::Vertex> vertices{};
-		Sierpinski(vertices, 5, { -0.5f, 0.5f }, { 0.5f, 0.5f }, { 0.0f, -0.5f });
+		std::vector<Engine::Model::Vertex> vertices{
+			{ {0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{ {0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{ {-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+		};
+		//Sierpinski(vertices, 5, { -0.5f, 0.5f }, { 0.5f, 0.5f }, { 0.0f, -0.5f });
 		m_Model = std::make_unique<Engine::Model>(m_Device, vertices);
 	}
 
