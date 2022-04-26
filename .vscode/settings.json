@@ -50,5 +50,12 @@
 		"unordered_set": "cpp",
 		"set": "cpp",
 		"fstream": "cpp"
-	}
+	},
+	"makefile.launchConfigurations": [
+		{
+			"cwd": "/media/lmhd/projects/side-projects/vulkan/tutorial",
+			"binaryPath": "/media/lmhd/projects/side-projects/vulkan/tutorial/a.out",
+			"binaryArgs": []
+		}
+	]
 }

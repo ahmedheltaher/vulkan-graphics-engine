@@ -38,12 +38,19 @@ namespace App {
 	}
 
 	void FirstApp::CreatePipelibeLayout() {
+
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(SimplePushConstantData);
+
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 0;
 		pipelineLayoutInfo.pSetLayouts = nullptr;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
 		if (vkCreatePipelineLayout(m_Device.GetDevice(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create pipeline layout!");
@@ -94,6 +101,9 @@ namespace App {
 	}
 
 	void FirstApp::RecordCommandBuffer(uint32_t imageIndex) {
+		static int frame = 0;
+		frame = (frame + 1) % 1000;
+
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -109,7 +119,7 @@ namespace App {
 		renderPassInfo.renderArea.extent = m_SwapChain->GetSwapChainExtent();
 
 		std::array<VkClearValue, 2> clearValues{};
-		clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+		clearValues[0].color = { 0.01f, 0.01f, 0.01f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -132,8 +142,16 @@ namespace App {
 		m_Pipeline->Bind(m_CommandBuffers[imageIndex]);
 
 		m_Model->Bind(m_CommandBuffers[imageIndex]);
-		m_Model->Draw(m_CommandBuffers[imageIndex]);
 
+		for (size_t i = 0; i < 4; i++) {
+			SimplePushConstantData pushConstantData{};
+			pushConstantData.Offset = { 0.005f + frame * 0.001f, -0.4f + i * 0.25f };
+			pushConstantData.Color = { 0.2f, 0.5f, 0.2f + 0.2f * i };
+
+			vkCmdPushConstants(m_CommandBuffers[imageIndex], m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &pushConstantData);
+			
+			m_Model->Draw(m_CommandBuffers[imageIndex]);
+		}
 
 		vkCmdEndRenderPass(m_CommandBuffers[imageIndex]);
 

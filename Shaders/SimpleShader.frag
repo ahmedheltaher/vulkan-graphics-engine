@@ -1,9 +1,14 @@
 #version 450
 
-layout (location = 0) in vec3 FragColor;
 layout (location = 0) out vec4 Color;
 
 
+layout (push_constant) uniform PushConstants {
+	vec2 Offset;
+	vec3 Color;
+} pushConstants;
+
+
 void main() {
-	Color = vec4(FragColor, 1.0);
+	Color = vec4(pushConstants.Color, 1.0);
 }

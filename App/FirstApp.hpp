@@ -13,7 +13,18 @@
 #include <memory>
 #include <vector>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
+
 namespace App {
+
+	struct SimplePushConstantData {
+		glm::vec2 Offset;
+		alignas(16) glm::vec3 Color;
+	};
+
 	class FirstApp : public NonMoveable, public NonCopyable {
 	public:
 		static constexpr int WIDTH = 800;
