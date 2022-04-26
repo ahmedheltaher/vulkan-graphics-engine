@@ -2,7 +2,7 @@
 
 namespace Engine {
 	Window::Window(std::string title, int width, int height)
-		: m_Data{ title, width, height, false, nullptr } {
+		: m_Data{ title, width, height, false, false, nullptr } {
 		Init();
 	}
 
@@ -37,11 +37,20 @@ namespace Engine {
 		}
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
 		m_Data.Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwSetWindowUserPointer(m_Data.Window, &m_Data);
 		SetVSync(m_Data.VSync);
 		glfwSwapBuffers(m_Data.Window);
+
+		glfwSetFramebufferSizeCallback(m_Data.Window, FramebufferResizeCallback);
+	}
+
+	void Window::FramebufferResizeCallback(GLFWwindow* window, int width, int height) {
+		WindowData* data = reinterpret_cast<WindowData*>(glfwGetWindowUserPointer(window));
+		data->Width = width;
+		data->Height = height;
+		data->FramebufferResized = true;
 	}
 }

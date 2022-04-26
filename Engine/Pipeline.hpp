@@ -9,16 +9,17 @@
 #include <vector>
 
 namespace Engine {
-
 	struct PipelineConfigurationInfo {
-		VkViewport Viewport;
-		VkRect2D Scissor;
+		VkPipelineViewportStateCreateInfo ViewportInfo;
 		VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfo;
 		VkPipelineRasterizationStateCreateInfo RasterizationInfo;
 		VkPipelineMultisampleStateCreateInfo MultisampleInfo;
 		VkPipelineColorBlendAttachmentState ColorBlendAttachment;
 		VkPipelineColorBlendStateCreateInfo ColorBlendInfo;
 		VkPipelineDepthStencilStateCreateInfo DepthStencilInfo;
+		std::vector<VkDynamicState> DynamicStateEnables;
+		VkPipelineDynamicStateCreateInfo DynamicStateInfo;
+
 		VkPipelineLayout PipelineLayout = nullptr;
 		VkRenderPass RenderPass = nullptr;
 		uint32_t Subpass = 0;
@@ -26,19 +27,19 @@ namespace Engine {
 
 
 
-	class Pipeline : public NonMoveable, public NonCopyable {
+	class Pipeline : public NonMoveable {
 	public:
-		Pipeline(Device& device, const PipelineConfigurationInfo& config, const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		Pipeline(Device&, const PipelineConfigurationInfo&, const std::string&, const std::string&);
 		~Pipeline();
 
-		void Bind(VkCommandBuffer commandBuffer);
-		static PipelineConfigurationInfo DefaultPipelineConfigurationInfo(uint32_t width, uint32_t height);
+		void Bind(VkCommandBuffer);
+		static void DefaultPipelineConfigurationInfo(PipelineConfigurationInfo&);
 	private:
-		static std::vector<char> ReadFile(const std::string& filePath);
+		static std::vector<char> ReadFile(const std::string&);
 
-		void CreateGraphicsPipeline(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const PipelineConfigurationInfo& config);
+		void CreateGraphicsPipeline(const std::string&, const std::string&, const PipelineConfigurationInfo&);
 
-		void CreateShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
+		void CreateShaderModule(const std::vector<char>&, VkShaderModule*);
 
 		Device& m_Device;
 		VkPipeline m_Pipeline;

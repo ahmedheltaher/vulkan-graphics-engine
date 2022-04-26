@@ -12,6 +12,18 @@
 namespace Engine {
 	SwapChain::SwapChain(Device& deviceReference, VkExtent2D extent)
 		: m_Device{ deviceReference }, m_WindowExtent{ extent } {
+		Init();
+	}
+
+	SwapChain::SwapChain(Device& deviceReference, VkExtent2D extent, std::shared_ptr<SwapChain> previousSwapChain)
+		: m_Device{ deviceReference }, m_WindowExtent{ extent }, m_PreviousSwapChain{ previousSwapChain } {
+		Init();
+
+		// Clean up the previous swap chain
+		m_PreviousSwapChain = nullptr;
+	}
+
+	void SwapChain::Init() {
 		CreateSwapChain();
 		CreateImageViews();
 		CreateRenderPass();
@@ -162,7 +174,7 @@ namespace Engine {
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		createInfo.oldSwapchain = m_PreviousSwapChain == nullptr ? VK_NULL_HANDLE : m_PreviousSwapChain->m_SwapChain;
 
 		if (vkCreateSwapchainKHR(m_Device.GetDevice(), &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create swap chain!");

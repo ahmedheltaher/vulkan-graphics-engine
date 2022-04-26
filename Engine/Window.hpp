@@ -13,7 +13,7 @@
 namespace Engine {
 	class Window : public NonMoveable, public NonCopyable {
 	public:
-		Window(std::string title, int width, int height);
+		Window(std::string, int, int);
 		~Window();
 
 
@@ -21,18 +21,23 @@ namespace Engine {
 
 		bool IsClosed() const;
 
-		void SetVSync(bool enabled);
+		void SetVSync(bool);
 
 		inline int GetWidth() const { return m_Data.Width; }
 		inline int GetHeight() const { return m_Data.Height; }
+		inline bool WasWindowResized() const { return m_Data.FramebufferResized; }
 
-		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+		inline void ResetWindowResizedFlag() { m_Data.FramebufferResized = false; }
+
+		void CreateWindowSurface(VkInstance, VkSurfaceKHR*);
 		VkExtent2D GetExtent() { return { static_cast<uint32_t>(m_Data.Width), static_cast<uint32_t>(m_Data.Height) }; }
 	private:
+		static void FramebufferResizeCallback(GLFWwindow*, int, int);
+
 		struct WindowData {
 			std::string Title;
 			int Width, Height;
-			bool VSync;
+			bool VSync, FramebufferResized;
 
 			GLFWwindow* Window;
 		};

@@ -22,14 +22,14 @@ namespace Engine {
 			static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
 		};
 
-		Model(Device& device, const std::vector<Vertex>& vertices);
+		Model(Device&, const std::vector<Vertex>&);
 		~Model();
 
-		void Bind(VkCommandBuffer commandBuffer);
-		void Draw(VkCommandBuffer commandBuffer);
+		void Bind(VkCommandBuffer);
+		void Draw(VkCommandBuffer);
 
 	private:
-		void CreateVertexBuffer(const std::vector<Vertex>& vertices);
+		void CreateVertexBuffer(const std::vector<Vertex>&);
 
 		Device& m_Device;
 		VkBuffer m_VertexBuffer;
