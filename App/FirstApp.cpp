@@ -1,12 +1,18 @@
 #include "./FirstApp.hpp"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
+
 // std lib headers
 #include <array>
 
 namespace App {
 
 	FirstApp::FirstApp() {
-		LoadModels();
+		LoadGameObjects();
 		CreatePipelibeLayout();
 		RecreateSwapChain();
 		CreateCommandBuffers();
@@ -101,9 +107,6 @@ namespace App {
 	}
 
 	void FirstApp::RecordCommandBuffer(uint32_t imageIndex) {
-		static int frame = 0;
-		frame = (frame + 1) % 1000;
-
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -139,19 +142,7 @@ namespace App {
 		VkRect2D scissor{ { 0, 0 }, m_SwapChain->GetSwapChainExtent() };
 		vkCmdSetScissor(m_CommandBuffers[imageIndex], 0, 1, &scissor);
 
-		m_Pipeline->Bind(m_CommandBuffers[imageIndex]);
-
-		m_Model->Bind(m_CommandBuffers[imageIndex]);
-
-		for (size_t i = 0; i < 4; i++) {
-			SimplePushConstantData pushConstantData{};
-			pushConstantData.Offset = { 0.005f + frame * 0.001f, -0.4f + i * 0.25f };
-			pushConstantData.Color = { 0.2f, 0.5f, 0.2f + 0.2f * i };
-
-			vkCmdPushConstants(m_CommandBuffers[imageIndex], m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &pushConstantData);
-			
-			m_Model->Draw(m_CommandBuffers[imageIndex]);
-		}
+		RenderGameObjects(m_CommandBuffers[imageIndex]);
 
 		vkCmdEndRenderPass(m_CommandBuffers[imageIndex]);
 
@@ -189,15 +180,55 @@ namespace App {
 
 	}
 
-	void FirstApp::LoadModels() {
+	void FirstApp::LoadGameObjects() {
 		std::vector<Engine::Model::Vertex> vertices{
-			{ {0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{ {0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-			{ {-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 		};
-		//Sierpinski(vertices, 5, { -0.5f, 0.5f }, { 0.5f, 0.5f }, { 0.0f, -0.5f });
-		m_Model = std::make_unique<Engine::Model>(m_Device, vertices);
+		std::vector<glm::vec3> colors{
+			{1.f, .7f, .73f},
+			{1.f, .87f, .73f},
+			{1.f, 1.f, .73f},
+			{.73f, 1.f, .8f},
+			{.73, .88f, 1.f}
+		};
+		for (auto& color : colors) color = glm::pow(color, glm::vec3{ 2.2f });
+
+		auto model = std::make_shared<Engine::Model>(m_Device, vertices);
+
+		for (int i = 0; i < 40; i++) {
+			auto triangle = Engine::GameObject::CreateGameObject();
+			triangle.Model = model;
+			triangle.Transform.Scale = glm::vec2(.5f) + i * .025f;
+			triangle.Transform.Rotation = i * glm::two_pi<float>() * .025f;
+			triangle.Color = colors[i % colors.size()];
+
+			m_GameObjects.push_back(std::move(triangle));
+		}
 	}
+
+	void FirstApp::RenderGameObjects(VkCommandBuffer commandBuffer) {
+		m_Pipeline->Bind(commandBuffer);
+		int i = 0;
+
+		for (auto& obj : m_GameObjects) {
+			i += 1;
+			obj.Transform.Rotation =
+				glm::mod<float>(obj.Transform.Rotation + 0.001f * i, 2.f * glm::pi<float>());
+
+			SimplePushConstantData pushConstantData{};
+			pushConstantData.Offset = obj.Transform.Translation;
+			pushConstantData.Color = obj.Color;
+			pushConstantData.Transform = obj.Transform.GetTransformMatrix();
+
+			vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &pushConstantData);
+
+			obj.Model->Bind(commandBuffer);
+			obj.Model->Draw(commandBuffer);
+		}
+	}
+
 
 	void FirstApp::Sierpinski(
 		std::vector<Engine::Model::Vertex>& vertices,

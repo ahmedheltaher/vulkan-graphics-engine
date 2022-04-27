@@ -4,7 +4,7 @@
 #include "../Engine/Pipeline.hpp"
 #include "../Engine/Device.hpp"
 #include "../Engine/SwapChain.hpp"
-#include "../Engine/Model.hpp"
+#include "../Engine/GameObject.hpp"
 
 #include "../Engine/Utils/NonMoveable.hpp"
 #include "../Engine/Utils/NonCopyable.hpp"
@@ -21,6 +21,7 @@
 namespace App {
 
 	struct SimplePushConstantData {
+		glm::mat2 Transform{ 1.0f };
 		glm::vec2 Offset;
 		alignas(16) glm::vec3 Color;
 	};
@@ -37,7 +38,7 @@ namespace App {
 		void Run();
 
 	private:
-		void LoadModels();
+		void LoadGameObjects();
 		void Sierpinski(std::vector<Engine::Model::Vertex>&, int, glm::vec2, glm::vec2, glm::vec2);
 		void CreatePipeline();
 		void CreatePipelibeLayout();
@@ -48,6 +49,8 @@ namespace App {
 		void RecreateSwapChain();
 		void RecordCommandBuffer(uint32_t);
 
+		void RenderGameObjects(VkCommandBuffer);
+
 		Engine::Window m_Window{ "FirstApp", WIDTH, HEIGHT };
 		Engine::Device m_Device{ m_Window };
 		std::unique_ptr <Engine::SwapChain> m_SwapChain;
@@ -55,6 +58,6 @@ namespace App {
 		VkPipelineLayout m_PipelineLayout;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
-		std::unique_ptr<Engine::Model> m_Model;
+		std::vector<Engine::GameObject> m_GameObjects;
 	};
 }
