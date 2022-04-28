@@ -33,7 +33,7 @@ namespace Engine {
 			return GameObject{ currentId++ };
 		};
 
-		inline IdType GetId() const { return m_Id; }
+		inline IdType GetId() const { return this->m_Id; }
 
 		std::shared_ptr<Engine::Model> Model{};
 		glm::vec3 Color{};

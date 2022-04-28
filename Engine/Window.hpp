@@ -23,14 +23,14 @@ namespace Engine {
 
 		void SetVSync(bool);
 
-		inline int GetWidth() const { return m_Data.Width; }
-		inline int GetHeight() const { return m_Data.Height; }
-		inline bool WasWindowResized() const { return m_Data.FramebufferResized; }
+		inline int GetWidth() const { return this->m_Data.Width; }
+		inline int GetHeight() const { return this->m_Data.Height; }
+		inline bool WasWindowResized() const { return this->m_Data.FramebufferResized; }
 
-		inline void ResetWindowResizedFlag() { m_Data.FramebufferResized = false; }
+		inline void ResetWindowResizedFlag() { this->m_Data.FramebufferResized = false; }
 
 		void CreateWindowSurface(VkInstance, VkSurfaceKHR*);
-		VkExtent2D GetExtent() { return { static_cast<uint32_t>(m_Data.Width), static_cast<uint32_t>(m_Data.Height) }; }
+		VkExtent2D GetExtent() { return { static_cast<uint32_t>(this->m_Data.Width), static_cast<uint32_t>(this->m_Data.Height) }; }
 	private:
 		static void FramebufferResizeCallback(GLFWwindow*, int, int);
 

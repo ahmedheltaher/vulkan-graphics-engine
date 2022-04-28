@@ -7,7 +7,7 @@ namespace Engine {
 	}
 
 	Window::~Window() {
-		glfwDestroyWindow(m_Data.Window);
+		glfwDestroyWindow(this->m_Data.Window);
 		glfwTerminate();
 	}
 
@@ -16,7 +16,7 @@ namespace Engine {
 	}
 
 	bool Window::IsClosed() const {
-		return glfwWindowShouldClose(m_Data.Window);
+		return glfwWindowShouldClose(this->m_Data.Window);
 	}
 	
 
@@ -39,12 +39,12 @@ namespace Engine {
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		m_Data.Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwSetWindowUserPointer(m_Data.Window, &m_Data);
-		SetVSync(m_Data.VSync);
-		glfwSwapBuffers(m_Data.Window);
+		m_Data.Window = glfwCreateWindow(this->m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		glfwSetWindowUserPointer(this->m_Data.Window, &this->m_Data);
+		SetVSync(this->m_Data.VSync);
+		glfwSwapBuffers(this->m_Data.Window);
 
-		glfwSetFramebufferSizeCallback(m_Data.Window, FramebufferResizeCallback);
+		glfwSetFramebufferSizeCallback(this->m_Data.Window, this->FramebufferResizeCallback);
 	}
 
 	void Window::FramebufferResizeCallback(GLFWwindow* window, int width, int height) {

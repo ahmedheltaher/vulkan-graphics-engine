@@ -36,14 +36,14 @@ namespace Engine {
 		~Device();
 
 
-		inline VkCommandPool GetCommandPool() { return m_CommandPool; }
-		inline VkDevice GetDevice() { return m_Device; }
-		inline VkSurfaceKHR Surface() { return m_Surface; }
-		inline VkQueue GraphicsQueue() { return m_GraphicsQueue; }
-		inline VkQueue PresentQueue() { return m_PresentQueue; }
+		inline VkCommandPool GetCommandPool() { return this->m_CommandPool; }
+		inline VkDevice GetDevice() { return this->m_Device; }
+		inline VkSurfaceKHR Surface() { return this->m_Surface; }
+		inline VkQueue GraphicsQueue() { return this->m_GraphicsQueue; }
+		inline VkQueue PresentQueue() { return this->m_PresentQueue; }
 
-		inline SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(m_PhysicalDevice); }
-		inline QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
+		inline SwapChainSupportDetails GetSwapChainSupport() { return this->QuerySwapChainSupport(this->m_PhysicalDevice); }
+		inline QueueFamilyIndices FindPhysicalQueueFamilies() { return this->FindQueueFamilies(this->m_PhysicalDevice); }
 
 
 		uint32_t FindMemoryType(uint32_t, VkMemoryPropertyFlags);

@@ -13,13 +13,13 @@ namespace Engine {
 	Pipeline::Pipeline(Device& device, const PipelineConfigurationInfo& config, const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 		: m_Device(device) {
 
-		CreateGraphicsPipeline(vertexShaderPath, fragmentShaderPath, config);
+		this->CreateGraphicsPipeline(vertexShaderPath, fragmentShaderPath, config);
 	}
 
 	Pipeline::~Pipeline() {
-		vkDestroyShaderModule(m_Device.GetDevice(), m_VertexShaderModule, nullptr);
-		vkDestroyShaderModule(m_Device.GetDevice(), m_FragmentShaderModule, nullptr);
-		vkDestroyPipeline(m_Device.GetDevice(), m_Pipeline, nullptr);
+		vkDestroyShaderModule(this->m_Device.GetDevice(), this->m_VertexShaderModule, nullptr);
+		vkDestroyShaderModule(this->m_Device.GetDevice(), this->m_FragmentShaderModule, nullptr);
+		vkDestroyPipeline(this->m_Device.GetDevice(), this->m_Pipeline, nullptr);
 	};
 
 	std::vector<char> Pipeline::ReadFile(const std::string& filePath) {
@@ -49,13 +49,13 @@ namespace Engine {
 		auto vertexShaderCode = ReadFile(vertexShaderPath);
 		auto fragmentShaderCode = ReadFile(fragmentShaderPath);
 
-		CreateShaderModule(vertexShaderCode, &m_VertexShaderModule);
-		CreateShaderModule(fragmentShaderCode, &m_FragmentShaderModule);
+		CreateShaderModule(vertexShaderCode, &this->m_VertexShaderModule);
+		CreateShaderModule(fragmentShaderCode, &this->m_FragmentShaderModule);
 
 		VkPipelineShaderStageCreateInfo saderStageInfo[2];
 		saderStageInfo[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		saderStageInfo[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
-		saderStageInfo[0].module = m_VertexShaderModule;
+		saderStageInfo[0].module = this->m_VertexShaderModule;
 		saderStageInfo[0].pName = "main";
 		saderStageInfo[0].flags = 0;
 		saderStageInfo[0].pNext = nullptr;
@@ -63,7 +63,7 @@ namespace Engine {
 
 		saderStageInfo[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		saderStageInfo[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		saderStageInfo[1].module = m_FragmentShaderModule;
+		saderStageInfo[1].module = this->m_FragmentShaderModule;
 		saderStageInfo[1].pName = "main";
 		saderStageInfo[1].flags = 0;
 		saderStageInfo[1].pNext = nullptr;
@@ -101,14 +101,14 @@ namespace Engine {
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 		pipelineInfo.basePipelineIndex = -1;
 
-		if (vkCreateGraphicsPipelines(m_Device.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_Pipeline) != VK_SUCCESS) {
+		if (vkCreateGraphicsPipelines(this->m_Device.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &this->m_Pipeline) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create graphics pipeline!");
 		}
 
 	};
 
 	void Pipeline::Bind(VkCommandBuffer commandBuffer) {
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, this->m_Pipeline);
 	};
 
 
@@ -118,7 +118,7 @@ namespace Engine {
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-		if (vkCreateShaderModule(m_Device.GetDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
+		if (vkCreateShaderModule(this->m_Device.GetDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create shader module!");
 		}
 	};
